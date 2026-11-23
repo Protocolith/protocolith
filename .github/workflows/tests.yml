@@ -43,6 +43,7 @@ jobs:
             os: windows-latest
             python: "3.12"
             pytest_args: "-q"
+          # One macOS job stays for APFS/fcntl behaviour; the rest of the macOS matrix runs locally.
           - job: "pytest-extra (macos-latest, python 3.12)"
             os: macos-latest
             python: "3.12"
@@ -68,6 +69,8 @@ jobs:
             python: "3.13"
             pytest_args: "-n auto -q"
     runs-on: ${{ matrix.os }}
+    # macOS runners are scarce on GitHub; a job that never gets a runner must not hang the run.
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
@@ -129,7 +132,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
